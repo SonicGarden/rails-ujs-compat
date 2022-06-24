@@ -1,12 +1,24 @@
-const confirmForm = () => {
+const confirmEvent = (message, event) => {
+    if (!window.confirm(message)) {
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+    }
+};
+const startConfirm = () => {
     document.addEventListener('submit', (event) => {
         const { target } = event;
         const form = target instanceof HTMLElement && target.closest('form[data-confirm]');
         if (!form)
             return;
-        if (!window.confirm(form.dataset.confirm)) {
-            event.preventDefault();
-        }
+        confirmEvent(form.dataset.confirm, event);
+    });
+    document.addEventListener('click', (event) => {
+        const { target } = event;
+        const element = target instanceof HTMLElement && target.closest('button[data-confirm], input[data-confirm]');
+        if (!element)
+            return;
+        confirmEvent(element.dataset.confirm, event);
     });
 };
 export const csrfToken = () => { var _a; return (_a = document.querySelector('meta[name=csrf-token]')) === null || _a === void 0 ? void 0 : _a.content; };
@@ -18,7 +30,7 @@ const disableFormElement = (element) => {
     element.disabled = true;
     disabledElements.add(element);
 };
-const disableForm = () => {
+const startDisableForm = () => {
     document.addEventListener('submit', (event) => {
         const { target } = event;
         const form = target instanceof HTMLElement && target.closest('form');
@@ -32,6 +44,6 @@ const disableForm = () => {
     });
 };
 export const start = () => {
-    confirmForm();
-    disableForm();
+    startConfirm();
+    startDisableForm();
 };
