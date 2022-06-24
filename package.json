@@ -1,0 +1,19 @@
+{
+  "name": "@sonicgarden/rails-ujs-compat",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "tsc"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^4.7.4"
+  },
+  "files": [
+    "README.md",
+    "package.json",
+    "dist"
+  ]
+}
