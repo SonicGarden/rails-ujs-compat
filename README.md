@@ -3,7 +3,7 @@
 ## Installation
 
 ```
-yarn add https://github.com/SonicGarden/rails-ujs-compat.git
+npm install @sonicgarden/rails-ujs-compat
 ```
 
 ## Usage
