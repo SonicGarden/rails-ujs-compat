@@ -25,18 +25,20 @@ const startConfirm = () => {
   })
 }
 
-export const csrfToken = (): string | undefined => document.querySelector<HTMLMetaElement>('meta[name=csrf-token]')?.content
+export const csrfToken = (): string | undefined =>
+  document.querySelector<HTMLMetaElement>('meta[name=csrf-token]')?.content
 
-const disabledElements = new WeakSet<HTMLElement>()
-const formDisableSelector =
+const ENABLE_ATTRIBUTE_NAME = 'data-ujs-compat-enable'
+
+const FORM_DISABLE_SELECTOR =
   'input[data-disable-with], input[data-disable], button[data-disable-with], button[data-disable]'
 
 type FormSubmitElement = HTMLInputElement | HTMLButtonElement
 
 const disableFormElement = (element: FormSubmitElement) => {
-  if (disabledElements.has(element)) return
+  if (element.hasAttribute(ENABLE_ATTRIBUTE_NAME) || element.disabled) return
   element.disabled = true
-  disabledElements.add(element)
+  element.setAttribute(ENABLE_ATTRIBUTE_NAME, '1')
 }
 
 const startDisableForm = () => {
@@ -46,9 +48,17 @@ const startDisableForm = () => {
     if (!form) return
 
     setTimeout(() => {
-      const elements = form.querySelectorAll<FormSubmitElement>(formDisableSelector)
+      const elements = form.querySelectorAll<FormSubmitElement>(FORM_DISABLE_SELECTOR)
       for (const element of elements) disableFormElement(element)
     }, 13)
+  })
+
+  // NOTE: For back forward cache
+  document.addEventListener('DOMContentLoaded', () => {
+    for (const element of document.querySelectorAll<FormSubmitElement>(`[${ENABLE_ATTRIBUTE_NAME}]`)) {
+      element.removeAttribute(ENABLE_ATTRIBUTE_NAME)
+      element.disabled = false
+    }
   })
 }
 
