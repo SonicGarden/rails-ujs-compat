@@ -54,7 +54,9 @@ const startDisableForm = () => {
   })
 
   // NOTE: For back forward cache
-  document.addEventListener('DOMContentLoaded', () => {
+  window.addEventListener('pageshow', (event) => {
+    if (!event.persisted) return
+
     for (const element of document.querySelectorAll<FormSubmitElement>(`[${ENABLE_ATTRIBUTE_NAME}]`)) {
       element.removeAttribute(ENABLE_ATTRIBUTE_NAME)
       element.disabled = false
